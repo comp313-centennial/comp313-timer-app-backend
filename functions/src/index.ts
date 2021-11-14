@@ -45,6 +45,68 @@ app.post('/registerToken', async (req : any, res : any) => {
     }
   });
 
+  app.post('/registerUser', async (req : any, res : any) => {
+    //data from request body
+    const phone = required(req.body,'phone');
+    const email = required(req.body, "email");
+  const displayName = required(req.body, "name");
+  const password = required(req.body, "password")
+
+  const exists = await admin.firestore().collection("users").where("phone", "==", phone).get().then((snapshot: { docs: { data: () => any; }[]; }) => snapshot.docs[0]?.data());
+  if (exists) {
+    res.status(400).send("Account already exists");
+  }
+
+  const user = {
+    email,
+    phoneNumber: phone,
+    displayName,
+    created: admin.firestore.FieldValue.serverTimestamp(),
+  };
+  await admin
+      .auth()
+      .createUser({
+        email: email,
+        emailVerified: false,
+        password: password,
+        displayName: displayName,
+        disabled: false,
+        phoneNumber: phone,
+      }).catch((e: any) => {
+        res.status(422).send(e.message);
+      });
+  admin.firestore().collection("users").doc(phone).set(user);
+  // See the UserRecord reference doc for the contents of userRecord.
+  res.status(200).send(user);
+  });
+
+  app.post('/getUser', async (req : any, res : any) => {
+    //data from request body
+    const phone = required(req.body,'phone');
+    const user = await admin.firestore().collection("users").where("phone", "==", phone).get().then((snapshot: { docs: { data: () => any; }[]; }) => snapshot.docs[0]?.data());
+    res.status(200).send(user);
+  });
+
+  app.post('/updateUser', async (req : any, res : any) => {
+    //data from request body
+    const phone = required(req.body,'phone');
+    const email = required(req.body, "email");
+  const displayName = required(req.body, "name");
+  const bio = required(req.body, "bio"); 
+
+  const user = {
+    email,
+    phoneNumber: phone,
+    displayName,
+    created: admin.firestore.FieldValue.serverTimestamp(),
+    bio: bio,
+  };
+  admin.firestore().collection("users").doc(phone).set(user);
+  // See the UserRecord reference doc for the contents of userRecord.
+  res.status(200).send(user);
+  });
+
+
   const required = (data: any, name: any) => {
     if(data.hasOwnProperty(name)) {
         return data[name];
