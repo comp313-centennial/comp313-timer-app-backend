@@ -93,7 +93,6 @@ app.post('/registerToken', async (req : any, res : any) => {
     const email = required(req.body, "email");
   const displayName = required(req.body, "name");
   const bio = required(req.body, "bio"); 
-
   const user = {
     email,
     phoneNumber: phone,
