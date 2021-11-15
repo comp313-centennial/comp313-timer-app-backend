@@ -1,6 +1,6 @@
 module.exports = {
-  root: true,
   env: {
+    browser: true,
     es6: true,
     node: true,
   },
@@ -15,9 +15,6 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: "module",
   },
-  ignorePatterns: [
-    "/lib/**/*", // Ignore built files.
-  ],
   plugins: [
     "@typescript-eslint",
     "import",
@@ -64,5 +61,12 @@ module.exports = {
     "no-var": "warn",
     "no-void": "error",
     "prefer-const": "warn",
+  },
+  settings: {
+    jsdoc: {
+      tagNamePreference: {
+        returns: "return",
+      },
+    },
   },
 };

@@ -92,12 +92,13 @@ app.post('/registerToken', async (req : any, res : any) => {
     const phone = required(req.body,'phone');
     const email = required(req.body, "email");
   const displayName = required(req.body, "name");
-
+  const bio = required(req.body, "bio"); 
   const user = {
     email,
     phoneNumber: phone,
     displayName,
     created: admin.firestore.FieldValue.serverTimestamp(),
+    bio: bio,
   };
   admin.firestore().collection("users").doc(phone).set(user);
   // See the UserRecord reference doc for the contents of userRecord.
