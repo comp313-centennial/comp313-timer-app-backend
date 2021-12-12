@@ -82,8 +82,8 @@ app.post('/registerToken', async (req : any, res : any) => {
 
   app.post('/getUser', async (req : any, res : any) => {
     //data from request body
-    const phone = required(req.body,'phone');
-    const user = await admin.firestore().collection("users").where("phone", "==", phone).get().then((snapshot: { docs: { data: () => any; }[]; }) => snapshot.docs[0]?.data());
+    const email = required(req.body,'email');
+    const user = await admin.firestore().collection("users").where("email", "==", email).get().then((snapshot: { docs: { data: () => any; }[]; }) => snapshot.docs[0]?.data());
     res.status(200).send(user);
   });
 
